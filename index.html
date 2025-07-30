@@ -1091,6 +1091,13 @@
     });
     // 初始化語言
     applyLang(getLang());
+
+    // 在語言切換函數中加入
+function switchLang(lang) {
+    currentLang = lang;
+    localStorage.setItem('preferred-lang', lang); // 儲存語言偏好
+    updateTexts();
+}
   </script>
   <!-- Download/Install App Bar -->
 <div id="download-app-bar" style="

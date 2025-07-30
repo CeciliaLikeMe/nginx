@@ -4,15 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Note Book - Your Notes</title>
-  
-  <!-- PWA Meta Tags -->
-  <meta name="theme-color" content="#667eea">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Note Book">
-  <meta name="msapplication-TileColor" content="#667eea">
-  
-  <!-- PWA Manifest -->
   <link rel="manifest" href="/manifest.json">
   
   <!-- Apple Touch Icons -->
@@ -498,7 +489,16 @@
     </div>
   </div>
 
+  <div id="lang-dropdown" style="display:none; position: absolute; right: 0; top: 36px; background: #fff; color: #333; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 120px;">
+    <div class="lang-option" data-lang="zh" style="padding: 10px 20px; cursor: pointer;">中文</div>
+    <div class="lang-option" data-lang="en" style="padding: 10px 20px; cursor: pointer;">English</div>
+    <div class="lang-option" data-lang="ja" style="padding: 10px 20px; cursor: pointer;">日本語</div>
+  </div>
+
   <script>
+    // 在 script 區塊開頭加入
+let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲存的語言偏好
+
     // Notes data structure
     let notes = JSON.parse(localStorage.getItem('notes')) || [];
     let editingNoteIndex = -1;
@@ -532,10 +532,7 @@
         update: '更新筆記',
         title: '標題',
         content: '內容',
-        placeholderTitle: '輸入標題...',
-        placeholderContent: '在這裡輸入內容...',
-        confirmDel: '確定要刪除這個筆記嗎？',
-        empty: '目前沒有筆記',
+        placeholderTitle: '輸入標題...'
       },
       en: {
         yourNotes: 'Your Notes',
@@ -550,32 +547,29 @@
         update: 'Update Note',
         title: 'Title',
         content: 'Content',
-        placeholderTitle: 'Enter note title...',
-        placeholderContent: 'Write your note here...',
-        confirmDel: 'Are you sure you want to delete this note?',
-        empty: 'No notes yet',
+        placeholderTitle: 'Enter title...'
       },
       ja: {
         yourNotes: 'あなたのノート',
-        organize: '考えやアイデアを整理しましょう',
-        noNotes: 'まだノートがありません',
+        organize: 'アイデアとインスピレーションを整理',
+        noNotes: 'ノートがありません',
         createFirst: '最初のノートを作成しましょう！',
         add: 'ノート追加',
         edit: '編集',
         del: '削除',
         cancel: 'キャンセル',
-        save: 'ノートを保存',
-        update: 'ノートを更新',
+        save: '保存',
+        update: '更新',
         title: 'タイトル',
         content: '内容',
-        placeholderTitle: 'タイトルを入力...',
-        placeholderContent: 'ここにノートを書いてください...',
-        confirmDel: 'このノートを削除してもよろしいですか？',
-        empty: 'まだノートがありません',
+        placeholderTitle: 'タイトルを入力...'
       }
+      // 可以依需求增加其他語言
     };
     function getLang() {
-      return localStorage.getItem('notebook-lang') || (navigator.language.startsWith('zh') ? 'zh' : (navigator.language.startsWith('ja') ? 'ja' : 'en'));
+      return localStorage.getItem('notebook-lang') || 
+             (navigator.language.startsWith('zh') ? 'zh' : 
+              navigator.language.startsWith('ja') ? 'ja' : 'en');
     }
     function applyLang(lang) {
       const dict = LANGS[lang] || LANGS['en'];
@@ -772,6 +766,52 @@
       localStorage.removeItem('noteDraft');
     }
 
+    // 更新文字的函數
+function updateTexts() {
+    const texts = LANGS[currentLang];
+    
+    // 更新所有需要多語言的元素
+    document.querySelector('.header h1').textContent = texts.yourNotes;
+    document.querySelector('.header p').textContent = texts.organize;
+    
+    // 空白狀態文字
+    document.querySelector('#emptyState h2').textContent = texts.noNotes;
+    document.querySelector('#emptyState p').textContent = texts.createFirst;
+    
+    // 按鈕文字
+    addNoteBtn.textContent = texts.add;
+    newNoteBtn.textContent = texts.add;
+    cancelBtn.textContent = texts.cancel;
+    saveBtn.textContent = editingNoteIndex === -1 ? texts.save : texts.update;
+    
+    // 表單標籤
+    document.querySelector('label[for="noteTitle"]').textContent = texts.title;
+    document.querySelector('label[for="noteContent"]').textContent = texts.content;
+    
+    // placeholder
+    noteTitle.placeholder = texts.placeholderTitle;
+    noteContent.placeholder = texts.content;
+    
+    // 更新所有筆記的編輯/刪除按鈕文字
+    document.querySelectorAll('.edit-btn').forEach(btn => btn.textContent = texts.edit);
+    document.querySelectorAll('.delete-btn').forEach(btn => btn.textContent = texts.del);
+}
+
+// 在頁面載入時更新文字
+window.addEventListener('load', () => {
+    init();
+    updateTexts();
+    registerServiceWorker();
+});
+
+    // 監聽 localStorage 變更
+window.addEventListener('storage', (e) => {
+    if (e.key === 'preferred-lang') {
+        currentLang = e.newValue;
+        updateTexts();
+    }
+});
+
     // Initialize when page loads
     window.addEventListener('load', () => {
       init();
@@ -791,60 +831,5 @@
       }
     }
   </script>
-  <!-- Download/Install App Bar -->
-<div id="download-app-bar" style="
-  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 9999;
-  background: linear-gradient(45deg, #667eea, #764ba2); color: #fff;
-  text-align: center; padding: 16px 0; font-size: 18px; display: none;">
-  <button id="download-app-btn" style="
-    background: #fff; color: #667eea; border: none; border-radius: 30px;
-    padding: 10px 30px; font-size: 18px; font-weight: bold; cursor: pointer;">
-    Install App
-  </button>
-  <span id="ios-tip" style="display:none;">請用 Safari 點選「分享」並選擇「加入主畫面」安裝 App</span>
-</div>
-<script>
-(function() {
-  let deferredPrompt = null;
-  window.addEventListener('beforeinstallprompt', function(e) {
-    e.preventDefault();
-    deferredPrompt = e;
-    window.deferredPrompt = e;
-  });
-  function isAndroid() {
-    return /android/i.test(navigator.userAgent);
-  }
-  function isIOS() {
-    return /iphone|ipad|ipod/i.test(navigator.userAgent);
-  }
-  function isInStandaloneMode() {
-    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-      || window.navigator.standalone === true;
-  }
-  function isInAppWebView() {
-    return false; // 如有自訂 UA 可加強
-  }
-  if (!isInStandaloneMode() && !isInAppWebView()) {
-    var bar = document.getElementById('download-app-bar');
-    var btn = document.getElementById('download-app-btn');
-    var iosTip = document.getElementById('ios-tip');
-    bar.style.display = 'block';
-    if (isAndroid() || (!isAndroid() && !isIOS())) {
-      btn.style.display = 'inline-block';
-      iosTip.style.display = 'none';
-      btn.onclick = function() {
-        if (window.deferredPrompt) {
-          window.deferredPrompt.prompt();
-        } else {
-          alert('請使用瀏覽器的「安裝應用程式」或「加到主畫面」功能安裝 App');
-        }
-      };
-    } else if (isIOS()) {
-      btn.style.display = 'none';
-      iosTip.style.display = 'inline-block';
-    }
-  }
-})();
-</script>
 </body>
 </html>
