@@ -6,6 +6,23 @@
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Note Book</title>
   
+  <!-- PWA Meta Tags -->
+  <meta name="theme-color" content="#667eea">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Note Book">
+  <meta name="msapplication-TileColor" content="#667eea">
+  <meta name="msapplication-config" content="/browserconfig.xml">
+  
+  <!-- PWA Manifest -->
+  <link rel="manifest" href="/manifest.json">
+  
+  <!-- Apple Touch Icons -->
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png">
+  <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon-167x167.png">
+  
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
   
@@ -316,6 +333,29 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
+
+    /* Install prompt animations */
+    @keyframes slideIn {
+      from {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(100%);
+        opacity: 0;
+      }
+    }
   </style>
 </head>
 
@@ -400,7 +440,107 @@
     window.addEventListener('load', () => {
       createParticles();
       hideLoading();
+      registerServiceWorker();
+      checkInstallPrompt();
     });
+
+    // Register Service Worker for PWA
+    function registerServiceWorker() {
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('/sw.js')
+          .then((registration) => {
+            console.log('Service Worker registered successfully:', registration);
+          })
+          .catch((error) => {
+            console.log('Service Worker registration failed:', error);
+          });
+      }
+    }
+
+    // Check for install prompt
+    let deferredPrompt;
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredPrompt = e;
+      showInstallPrompt();
+    });
+
+    function showInstallPrompt() {
+      // Create install prompt
+      const installPrompt = document.createElement('div');
+      installPrompt.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #667eea, #764ba2);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        z-index: 10000;
+        font-family: 'Roboto', sans-serif;
+        font-size: 14px;
+        max-width: 300px;
+        animation: slideIn 0.5s ease;
+      `;
+      installPrompt.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px;">
+          <i class="fas fa-download" style="font-size: 18px;"></i>
+          <strong>Install Note Book App</strong>
+        </div>
+        <p style="margin: 0 0 10px 0; opacity: 0.9;">Add to home screen for quick access</p>
+        <div style="display: flex; gap: 10px;">
+          <button onclick="installApp()" style="
+            background: white;
+            color: #667eea;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: 500;
+          ">Install</button>
+          <button onclick="dismissInstallPrompt()" style="
+            background: transparent;
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+          ">Later</button>
+        </div>
+      `;
+      document.body.appendChild(installPrompt);
+    }
+
+    function installApp() {
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+          } else {
+            console.log('User dismissed the install prompt');
+          }
+          deferredPrompt = null;
+        });
+      }
+      dismissInstallPrompt();
+    }
+
+    function dismissInstallPrompt() {
+      const prompt = document.querySelector('div[style*="position: fixed"]');
+      if (prompt) {
+        prompt.style.animation = 'slideOut 0.5s ease';
+        setTimeout(() => prompt.remove(), 500);
+      }
+    }
+
+    function checkInstallPrompt() {
+      // Check if app is already installed
+      if (window.matchMedia('(display-mode: standalone)').matches) {
+        console.log('App is already installed');
+      }
+    }
 
     // Add smooth scrolling for buttons
     document.querySelectorAll('.btn').forEach(btn => {
