@@ -517,6 +517,85 @@
     const noteContent = document.getElementById('noteContent');
     const saveBtn = document.getElementById('saveBtn');
 
+    // 多語言字典
+    const LANGS = {
+      zh: {
+        yourNotes: '你的筆記',
+        organize: '整理你的想法與靈感',
+        noNotes: '目前沒有筆記',
+        createFirst: '建立你的第一個筆記開始吧！',
+        add: '新增筆記',
+        edit: '編輯',
+        del: '刪除',
+        cancel: '取消',
+        save: '儲存筆記',
+        update: '更新筆記',
+        title: '標題',
+        content: '內容',
+        placeholderTitle: '輸入標題...',
+        placeholderContent: '在這裡輸入內容...',
+        confirmDel: '確定要刪除這個筆記嗎？',
+        empty: '目前沒有筆記',
+      },
+      en: {
+        yourNotes: 'Your Notes',
+        organize: 'Organize your thoughts and ideas',
+        noNotes: 'No notes yet',
+        createFirst: 'Create your first note to get started!',
+        add: 'Add Note',
+        edit: 'Edit',
+        del: 'Delete',
+        cancel: 'Cancel',
+        save: 'Save Note',
+        update: 'Update Note',
+        title: 'Title',
+        content: 'Content',
+        placeholderTitle: 'Enter note title...',
+        placeholderContent: 'Write your note here...',
+        confirmDel: 'Are you sure you want to delete this note?',
+        empty: 'No notes yet',
+      },
+      ja: {
+        yourNotes: 'あなたのノート',
+        organize: '考えやアイデアを整理しましょう',
+        noNotes: 'まだノートがありません',
+        createFirst: '最初のノートを作成しましょう！',
+        add: 'ノート追加',
+        edit: '編集',
+        del: '削除',
+        cancel: 'キャンセル',
+        save: 'ノートを保存',
+        update: 'ノートを更新',
+        title: 'タイトル',
+        content: '内容',
+        placeholderTitle: 'タイトルを入力...',
+        placeholderContent: 'ここにノートを書いてください...',
+        confirmDel: 'このノートを削除してもよろしいですか？',
+        empty: 'まだノートがありません',
+      }
+    };
+    function getLang() {
+      return localStorage.getItem('notebook-lang') || (navigator.language.startsWith('zh') ? 'zh' : (navigator.language.startsWith('ja') ? 'ja' : 'en'));
+    }
+    function applyLang(lang) {
+      const dict = LANGS[lang] || LANGS['en'];
+      document.querySelector('.header h1').textContent = dict.yourNotes;
+      document.querySelector('.header p').textContent = dict.organize;
+      document.getElementById('addNoteBtn').title = dict.add;
+      document.getElementById('addNoteBtn').innerHTML = `<i class="fas fa-plus"></i>`;
+      document.getElementById('emptyState').querySelector('h3').textContent = dict.noNotes;
+      document.getElementById('emptyState').querySelector('p').textContent = dict.createFirst;
+      // Modal
+      document.getElementById('modalTitle').textContent = dict.add;
+      document.getElementById('noteTitle').placeholder = dict.placeholderTitle;
+      document.getElementById('noteContent').placeholder = dict.placeholderContent;
+      document.getElementById('cancelBtn').textContent = dict.cancel;
+      document.getElementById('saveBtn').textContent = dict.save;
+    }
+    window.addEventListener('DOMContentLoaded', function() {
+      applyLang(getLang());
+    });
+
     // Initialize
     function init() {
       renderNotes();
@@ -768,4 +847,4 @@
 })();
 </script>
 </body>
-</html> 
+</html>
