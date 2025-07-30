@@ -269,6 +269,48 @@
       position: relative;
     }
 
+    /* 全螢幕模式樣式 */
+    .modal-content.fullscreen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      max-width: none;
+      max-height: none;
+      margin: 0;
+      border-radius: 0;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .modal-content.fullscreen .form-textarea {
+      flex: 1;
+      height: calc(100vh - 200px);
+    }
+
+    /* 全螢幕切換按鈕 */
+    .fullscreen-btn {
+      background: none;
+      border: none;
+      color: #666;
+      cursor: pointer;
+      font-size: 20px;
+      padding: 5px;
+      transition: color 0.3s ease;
+    }
+
+    .fullscreen-btn:hover {
+      color: #333;
+    }
+
+    /* 自適應高度的表單群組 */
+    .modal-content.fullscreen .form-group:last-of-type {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
     .modal-header {
       display: flex;
       justify-content: space-between;
@@ -470,7 +512,12 @@
     <div class="modal-content">
       <div class="modal-header">
         <h2 class="modal-title" id="modalTitle">Add New Note</h2>
-        <button class="close-btn" id="closeModal">&times;</button>
+        <div style="display: flex; gap: 10px;">
+          <button class="fullscreen-btn" id="fullscreenBtn">
+            <i class="fas fa-expand"></i>
+          </button>
+          <button class="close-btn" id="closeModal">&times;</button>
+        </div>
       </div>
       <form id="noteForm">
         <div class="form-group">
@@ -516,6 +563,8 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
     const noteTitle = document.getElementById('noteTitle');
     const noteContent = document.getElementById('noteContent');
     const saveBtn = document.getElementById('saveBtn');
+    const fullscreenBtn = document.getElementById('fullscreenBtn');
+    const modalContent = document.querySelector('.modal-content');
 
     // 多語言字典
     const LANGS = {
@@ -532,7 +581,8 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
         update: '更新筆記',
         title: '標題',
         content: '內容',
-        placeholderTitle: '輸入標題...'
+        placeholderTitle: '輸入標題...',
+        toggleFullscreen: '切換全螢幕',
       },
       en: {
         yourNotes: 'Your Notes',
@@ -547,7 +597,8 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
         update: 'Update Note',
         title: 'Title',
         content: 'Content',
-        placeholderTitle: 'Enter title...'
+        placeholderTitle: 'Enter title...',
+        toggleFullscreen: 'Toggle Fullscreen',
       },
       ja: {
         yourNotes: 'あなたのノート',
@@ -562,7 +613,8 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
         update: '更新',
         title: 'タイトル',
         content: '内容',
-        placeholderTitle: 'タイトルを入力...'
+        placeholderTitle: 'タイトルを入力...',
+        toggleFullscreen: 'フルスクリーン切り替え',
       }
       // 可以依需求增加其他語言
     };
@@ -620,6 +672,32 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
       noteModal.addEventListener('click', (e) => {
         if (e.target === noteModal) {
           closeModalFunc();
+        }
+      });
+      
+      // 設定全螢幕切換按鈕事件
+      fullscreenBtn.addEventListener('click', () => {
+        modalContent.classList.toggle('fullscreen');
+        
+        // 切換圖示
+        const icon = fullscreenBtn.querySelector('i');
+        if (modalContent.classList.contains('fullscreen')) {
+          icon.classList.remove('fa-expand');
+          icon.classList.add('fa-compress');
+        } else {
+          icon.classList.remove('fa-compress');
+          icon.classList.add('fa-expand');
+        }
+        
+        // 自動聚焦文字區
+        noteContent.focus();
+      });
+      
+      // 加入快捷鍵支援
+      document.addEventListener('keydown', (e) => {
+        if (noteModal.classList.contains('show') && e.key === 'F11') {
+          e.preventDefault();
+          fullscreenBtn.click();
         }
       });
     }
