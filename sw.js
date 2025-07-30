@@ -59,3 +59,32 @@ function doBackgroundSync() {
   console.log('Background sync triggered');
   return Promise.resolve();
 } 
+// DOM elements
+const fullscreenBtn = document.getElementById('fullscreenBtn');
+const modalContent = document.querySelector('.modal-content');
+
+// 設定全螢幕切換按鈕事件
+fullscreenBtn.addEventListener('click', () => {
+  modalContent.classList.toggle('fullscreen');
+  
+  // 切換圖示
+  const icon = fullscreenBtn.querySelector('i');
+  if (modalContent.classList.contains('fullscreen')) {
+    icon.classList.remove('fa-expand');
+    icon.classList.add('fa-compress');
+  } else {
+    icon.classList.remove('fa-compress');
+    icon.classList.add('fa-expand');
+  }
+  
+  // 自動聚焦文字區
+  noteContent.focus();
+});
+
+// 加入快捷鍵支援
+document.addEventListener('keydown', (e) => {
+  if (noteModal.classList.contains('show') && e.key === 'F11') {
+    e.preventDefault();
+    fullscreenBtn.click();
+  }
+});
