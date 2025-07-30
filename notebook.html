@@ -698,20 +698,20 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
         if (modalContent.classList.contains('fullscreen')) {
           icon.classList.remove('fa-expand');
           icon.classList.add('fa-compress');
+          noteContent.focus(); // 自動聚焦到編輯區
         } else {
           icon.classList.remove('fa-compress');
           icon.classList.add('fa-expand');
         }
-        
-        // 自動聚焦文字區
-        noteContent.focus();
       });
       
       // 加入快捷鍵支援
       document.addEventListener('keydown', (e) => {
-        if (noteModal.classList.contains('show') && e.key === 'F11') {
-          e.preventDefault();
-          fullscreenBtn.click();
+        if (noteModal.classList.contains('show')) {
+          if (e.key === 'F11' || (e.ctrlKey && e.key === 'f')) {
+            e.preventDefault();
+            toggleFullscreen();
+          }
         }
       });
     }
