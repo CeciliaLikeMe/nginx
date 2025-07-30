@@ -689,31 +689,34 @@ let currentLang = localStorage.getItem('preferred-lang') || 'zh'; // 讀取儲�
         }
       });
       
-      // 全螢幕功能
-      fullscreenBtn.addEventListener('click', () => {
-        modalContent.classList.toggle('fullscreen');
-        
-        // 切換圖示
-        const icon = fullscreenBtn.querySelector('i');
-        if (modalContent.classList.contains('fullscreen')) {
-          icon.classList.remove('fa-expand');
-          icon.classList.add('fa-compress');
-          noteContent.focus(); // 自動聚焦到編輯區
-        } else {
-          icon.classList.remove('fa-compress');
-          icon.classList.add('fa-expand');
-        }
-      });
-      
-      // 加入快捷鍵支援
-      document.addEventListener('keydown', (e) => {
-        if (noteModal.classList.contains('show')) {
-          if (e.key === 'F11' || (e.ctrlKey && e.key === 'f')) {
-            e.preventDefault();
-            toggleFullscreen();
-          }
-        }
-      });
+      // 更新全螢幕相關功能
+function toggleFullscreen() {
+  modalContent.classList.toggle('fullscreen');
+  
+  // 切換圖示
+  const icon = fullscreenBtn.querySelector('i');
+  if (modalContent.classList.contains('fullscreen')) {
+    icon.classList.remove('fa-expand');
+    icon.classList.add('fa-compress');
+    noteContent.focus(); // 自動聚焦到編輯區
+  } else {
+    icon.classList.remove('fa-compress');
+    icon.classList.add('fa-expand');
+  }
+}
+
+// 設定全螢幕切換按鈕事件
+fullscreenBtn.addEventListener('click', toggleFullscreen);
+
+// 加入快捷鍵支援
+document.addEventListener('keydown', (e) => {
+  if (noteModal.classList.contains('show')) {
+    if (e.key === 'F11' || (e.ctrlKey && e.key === 'f')) {
+      e.preventDefault();
+      toggleFullscreen();
+    }
+  }
+});
     }
 
     // Open modal for adding/editing note
