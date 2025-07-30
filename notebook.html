@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Note Book - Your Notes</title>
+  
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Roboto:wght@300;400;500;700&family=Source+Code+Pro:wght@400;600&display=swap" rel="stylesheet">
+  
+  <!-- Font Awesome for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Roboto', sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Navigation */
+    .nav {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      z-index: 1000;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .nav-brand {
+      font-family: 'Orbitron', monospace;
+      font-weight: 700;
+      color: white;
+      font-size: 1.5rem;
+      text-decoration: none;
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 20px;
+    }
+
+    .nav-link {
+      color: rgba(255, 255, 255, 0.8);
+      text-decoration: none;
+      font-weight: 500;
+      transition: color 0.3s ease;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .nav-link:hover {
+      color: white;
+    }
+
+    /* Main container */
+    .main-container {
+      padding-top: 80px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* Header */
+    .header {
+      text-align: center;
+      padding: 40px 20px;
+      color: white;
+    }
+
+    .header h1 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(2rem, 4vw, 3rem);
+      margin-bottom: 10px;
+      text-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+    }
+
+    .header p {
+      font-size: 1.1rem;
+      opacity: 0.8;
+    }
+
+    /* Notes container */
+    .notes-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+
+    /* Note card */
+    .note-card {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      transition: all 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .note-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+      transition: left 0.5s;
+    }
+
+    .note-card:hover::before {
+      left: 100%;
+    }
+
+    .note-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+    }
+
+    .note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .note-title {
+      font-weight: 600;
+      color: white;
+      font-size: 1.2rem;
+    }
+
+    .note-date {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .note-content {
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+      margin-bottom: 15px;
+      max-height: 100px;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: -webkit-box;
+      display: -moz-box;
+      display: box;
+      -webkit-line-clamp: 4;
+      line-clamp: 4;
+      -webkit-box-orient: vertical;
+      -moz-box-orient: vertical;
+      box-orient: vertical;
+    }
+
+    .note-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
+    .btn-small {
+      padding: 5px 10px;
+      border: none;
+      border-radius: 5px;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    .btn-edit {
+      background: rgba(78, 205, 196, 0.3);
+      color: white;
+    }
+
+    .btn-edit:hover {
+      background: rgba(78, 205, 196, 0.5);
+    }
+
+    .btn-delete {
+      background: rgba(255, 107, 107, 0.3);
+      color: white;
+    }
+
+    .btn-delete:hover {
+      background: rgba(255, 107, 107, 0.5);
+    }
+
+    /* Add note button */
+    .add-note-btn {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      border: none;
+      color: white;
+      font-size: 24px;
+      cursor: pointer;
+      box-shadow: 0 10px 20px rgba(255, 107, 107, 0.3);
+      transition: all 0.3s ease;
+      z-index: 100;
+    }
+
+    .add-note-btn:hover {
+      transform: scale(1.1);
+      box-shadow: 0 15px 30px rgba(255, 107, 107, 0.4);
+    }
+
+    /* Modal */
+    .modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.5);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 1000;
+    }
+
+    .modal.show {
+      display: flex;
+    }
+
+    .modal-content {
+      background: white;
+      border-radius: 15px;
+      padding: 30px;
+      width: 90%;
+      max-width: 600px;
+      max-height: 80vh;
+      overflow-y: auto;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 24px;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      transition: border-color 0.3s ease;
+      font-family: 'Roboto', sans-serif;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .form-textarea {
+      width: 100%;
+      padding: 12px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 16px;
+      font-family: 'Source Code Pro', monospace;
+      resize: vertical;
+      min-height: 200px;
+      transition: border-color 0.3s ease;
+    }
+
+    .form-textarea:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+      margin-top: 20px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 500;
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(102, 126, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: #f0f0f0;
+      color: #333;
+    }
+
+    .btn-secondary:hover {
+      background: #e0e0e0;
+    }
+
+    /* Empty state */
+    .empty-state {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.6);
+      padding: 60px 20px;
+    }
+
+    .empty-state i {
+      font-size: 4rem;
+      margin-bottom: 20px;
+      opacity: 0.5;
+    }
+
+    .empty-state h3 {
+      font-size: 1.5rem;
+      margin-bottom: 10px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .nav {
+        padding: 15px 20px;
+      }
+
+      .nav-links {
+        gap: 15px;
+      }
+
+      .notes-container {
+        grid-template-columns: 1fr;
+        padding: 15px;
+      }
+
+      .modal-content {
+        width: 95%;
+        padding: 20px;
+      }
+
+      .add-note-btn {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <!-- Navigation -->
+  <nav class="nav">
+    <a href="index.html" class="nav-brand">
+      <i class="fas fa-book"></i> Note Book
+    </a>
+    <div class="nav-links">
+      <a href="index.html" class="nav-link">
+        <i class="fas fa-home"></i> Home
+      </a>
+      <a href="#" class="nav-link" id="newNoteBtn">
+        <i class="fas fa-plus"></i> New Note
+      </a>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <div class="main-container">
+    <!-- Header -->
+    <div class="header">
+      <h1>Your Notes</h1>
+      <p>Organize your thoughts and ideas</p>
+    </div>
+
+    <!-- Notes container -->
+    <div class="notes-container" id="notesContainer">
+      <!-- Notes will be dynamically added here -->
+    </div>
+
+    <!-- Empty state -->
+    <div class="empty-state" id="emptyState" style="display: none;">
+      <i class="fas fa-book-open"></i>
+      <h3>No notes yet</h3>
+      <p>Create your first note to get started!</p>
+    </div>
+  </div>
+
+  <!-- Add note button -->
+  <button class="add-note-btn" id="addNoteBtn">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <!-- Modal for adding/editing notes -->
+  <div class="modal" id="noteModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title" id="modalTitle">Add New Note</h2>
+        <button class="close-btn" id="closeModal">&times;</button>
+      </div>
+      <form id="noteForm">
+        <div class="form-group">
+          <label class="form-label" for="noteTitle">Title</label>
+          <input type="text" id="noteTitle" class="form-input" placeholder="Enter note title..." required>
+        </div>
+        <div class="form-group">
+          <label class="form-label" for="noteContent">Content</label>
+          <textarea id="noteContent" class="form-textarea" placeholder="Write your note here..." required></textarea>
+        </div>
+        <div class="modal-actions">
+          <button type="button" class="btn btn-secondary" id="cancelBtn">Cancel</button>
+          <button type="submit" class="btn btn-primary" id="saveBtn">Save Note</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // Notes data structure
+    let notes = JSON.parse(localStorage.getItem('notes')) || [];
+    let editingNoteIndex = -1;
+
+    // DOM elements
+    const notesContainer = document.getElementById('notesContainer');
+    const emptyState = document.getElementById('emptyState');
+    const addNoteBtn = document.getElementById('addNoteBtn');
+    const newNoteBtn = document.getElementById('newNoteBtn');
+    const noteModal = document.getElementById('noteModal');
+    const closeModal = document.getElementById('closeModal');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const noteForm = document.getElementById('noteForm');
+    const modalTitle = document.getElementById('modalTitle');
+    const noteTitle = document.getElementById('noteTitle');
+    const noteContent = document.getElementById('noteContent');
+    const saveBtn = document.getElementById('saveBtn');
+
+    // Initialize
+    function init() {
+      renderNotes();
+      setupEventListeners();
+      
+      // Check URL parameters for auto-opening new note modal
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('action') === 'new') {
+        // Remove the parameter from URL without reloading
+        window.history.replaceState({}, document.title, window.location.pathname);
+        // Open the new note modal
+        setTimeout(() => openModal(), 500);
+      }
+    }
+
+    // Setup event listeners
+    function setupEventListeners() {
+      addNoteBtn.addEventListener('click', openModal);
+      newNoteBtn.addEventListener('click', openModal);
+      closeModal.addEventListener('click', closeModalFunc);
+      cancelBtn.addEventListener('click', closeModalFunc);
+      noteForm.addEventListener('submit', saveNote);
+      
+      // Auto-save functionality for textarea
+      noteContent.addEventListener('input', autoSave);
+      
+      // Close modal when clicking outside
+      noteModal.addEventListener('click', (e) => {
+        if (e.target === noteModal) {
+          closeModalFunc();
+        }
+      });
+    }
+
+    // Open modal for adding/editing note
+    function openModal(index = -1) {
+      editingNoteIndex = index;
+      
+      if (index >= 0) {
+        // Editing existing note
+        const note = notes[index];
+        modalTitle.textContent = 'Edit Note';
+        noteTitle.value = note.title;
+        noteContent.value = note.content;
+        saveBtn.textContent = 'Update Note';
+      } else {
+        // Adding new note
+        modalTitle.textContent = 'Add New Note';
+        noteTitle.value = '';
+        noteContent.value = '';
+        saveBtn.textContent = 'Save Note';
+        // Load draft for new notes only
+        loadDraft();
+      }
+      
+      noteModal.classList.add('show');
+      noteTitle.focus();
+    }
+
+    // Close modal
+    function closeModalFunc() {
+      noteModal.classList.remove('show');
+      editingNoteIndex = -1;
+      clearDraft(); // Clear draft when closing modal
+    }
+
+    // Save note
+    function saveNote(e) {
+      e.preventDefault();
+      
+      const title = noteTitle.value.trim();
+      const content = noteContent.value.trim();
+      
+      if (!title || !content) {
+        alert('Please fill in both title and content!');
+        return;
+      }
+      
+      if (editingNoteIndex >= 0) {
+        // Update existing note
+        notes[editingNoteIndex] = {
+          title,
+          content,
+          date: notes[editingNoteIndex].date,
+          updated: new Date().toLocaleDateString()
+        };
+      } else {
+        // Add new note
+        notes.unshift({
+          title,
+          content,
+          date: new Date().toLocaleDateString(),
+          updated: null
+        });
+      }
+      
+      // Save to localStorage
+      localStorage.setItem('notes', JSON.stringify(notes));
+      
+      // Re-render and close modal
+      renderNotes();
+      closeModalFunc();
+      clearDraft(); // Clear draft after saving
+    }
+
+    // Delete note
+    function deleteNote(index) {
+      if (confirm('Are you sure you want to delete this note?')) {
+        notes.splice(index, 1);
+        localStorage.setItem('notes', JSON.stringify(notes));
+        renderNotes();
+      }
+    }
+
+    // Render notes
+    function renderNotes() {
+      if (notes.length === 0) {
+        notesContainer.style.display = 'none';
+        emptyState.style.display = 'block';
+        return;
+      }
+      
+      notesContainer.style.display = 'grid';
+      emptyState.style.display = 'none';
+      
+      notesContainer.innerHTML = notes.map((note, index) => `
+        <div class="note-card" onclick="openModal(${index})">
+          <div class="note-header">
+            <div class="note-title">${note.title}</div>
+            <div class="note-date">${note.date}${note.updated ? ` (updated: ${note.updated})` : ''}</div>
+          </div>
+          <div class="note-content">${note.content}</div>
+          <div class="note-actions">
+            <button class="btn-small btn-edit" onclick="event.stopPropagation(); openModal(${index})">
+              <i class="fas fa-edit"></i> Edit
+            </button>
+            <button class="btn-small btn-delete" onclick="event.stopPropagation(); deleteNote(${index})">
+              <i class="fas fa-trash"></i> Delete
+            </button>
+          </div>
+        </div>
+      `).join('');
+    }
+
+    // Auto-save function
+    function autoSave() {
+      const title = noteTitle.value.trim();
+      const content = noteContent.value.trim();
+      
+      if (title || content) {
+        const draft = {
+          title: title,
+          content: content,
+          timestamp: new Date().toISOString()
+        };
+        localStorage.setItem('noteDraft', JSON.stringify(draft));
+      } else {
+        localStorage.removeItem('noteDraft');
+      }
+    }
+
+    // Load draft when opening modal
+    function loadDraft() {
+      const draft = localStorage.getItem('noteDraft');
+      if (draft && editingNoteIndex === -1) { // Only load draft for new notes, not editing
+        const draftData = JSON.parse(draft);
+        noteTitle.value = draftData.title || '';
+        noteContent.value = draftData.content || '';
+      }
+    }
+
+    // Clear draft after saving
+    function clearDraft() {
+      localStorage.removeItem('noteDraft');
+    }
+
+    // Initialize when page loads
+    window.addEventListener('load', init);
+  </script>
+</body>
+</html> 
