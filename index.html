@@ -588,6 +588,18 @@
   <!-- Animated background particles -->
   <div class="particles" id="particles"></div>
 
+  <!-- 在 header/nav 區加語言切換按鈕 -->
+<div style="position: fixed; top: 20px; right: 30px; z-index: 2000;">
+  <button id="lang-switch-btn" style="background: none; border: none; font-size: 22px; cursor: pointer; color: #fff;">
+    🌐
+  </button>
+  <div id="lang-dropdown" style="display:none; position: absolute; right: 0; top: 36px; background: #fff; color: #333; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); min-width: 120px;">
+    <div class="lang-option" data-lang="zh" style="padding: 10px 20px; cursor: pointer;">中文</div>
+    <div class="lang-option" data-lang="en" style="padding: 10px 20px; cursor: pointer;">English</div>
+    <div class="lang-option" data-lang="ja" style="padding: 10px 20px; cursor: pointer;">日本語</div>
+  </div>
+</div>
+
   <!-- Main content -->
   <div class="main-container">
     <!-- Header section -->
@@ -907,6 +919,179 @@
         particle.style.transform = `translateY(${scrolled * speed}px)`;
       });
     });
+
+    // 多語言字典
+    const LANGS = {
+      zh: {
+        title: 'Note Book',
+        subtitle: '你的學習與筆記好夥伴',
+        open: '打開筆記本',
+        create: '新增筆記',
+        features: '功能特色',
+        easyNote: '簡單筆記',
+        easyNoteDesc: '用直覺介面建立與編輯筆記',
+        autoSave: '自動儲存',
+        autoSaveDesc: '輸入時自動儲存你的筆記',
+        pwaReady: 'PWA 支援',
+        pwaReadyDesc: '可安裝成 App 快速啟動',
+        privacy: '隱私優先',
+        privacyDesc: '所有筆記僅儲存在你的裝置',
+        howTo: '使用說明',
+        step1: '打開筆記本',
+        step1Desc: '點擊「打開筆記本」開始記錄',
+        step2: '新增筆記',
+        step2Desc: '點擊「＋」建立新筆記',
+        step3: '開始書寫',
+        step3Desc: '輸入內容自動儲存',
+        step4: '安裝 App',
+        step4Desc: '點擊右下角下載按鈕安裝',
+        faq: '常見問題',
+        faq1q: '我的資料安全嗎？',
+        faq1a: '安全！所有筆記僅儲存在本地，不會上傳。',
+        faq2q: '可以離線用嗎？',
+        faq2a: '可以！安裝成 App 後離線也能用。',
+        faq3q: '怎麼安裝 App？',
+        faq3a: '請點右下角下載，或用瀏覽器「加到主畫面」。',
+        faq4q: '可以分享筆記嗎？',
+        faq4a: '目前僅限本機，可複製內容自行分享。',
+      },
+      en: {
+        title: 'Note Book',
+        subtitle: 'Your digital companion for learning and note-taking',
+        open: 'Open Note Book',
+        create: 'Create New Note',
+        features: 'Features',
+        easyNote: 'Easy Note Taking',
+        easyNoteDesc: 'Create and edit notes with a simple, intuitive interface',
+        autoSave: 'Auto Save',
+        autoSaveDesc: 'Your notes are automatically saved as you type',
+        pwaReady: 'PWA Ready',
+        pwaReadyDesc: 'Install as an app on your device for quick access',
+        privacy: 'Privacy First',
+        privacyDesc: 'All your notes are stored locally on your device',
+        howTo: 'How to Use',
+        step1: 'Open Note Book',
+        step1Desc: 'Click "Open Note Book" to start creating your notes',
+        step2: 'Create New Note',
+        step2Desc: 'Click the "+" button to create a new note',
+        step3: 'Start Writing',
+        step3Desc: 'Type your thoughts and ideas - they\'ll auto-save',
+        step4: 'Install as App',
+        step4Desc: 'Click the download button to install as a PWA',
+        faq: 'Frequently Asked Questions',
+        faq1q: 'Is my data safe?',
+        faq1a: 'Yes! All your notes are stored locally on your device using localStorage. They never leave your browser.',
+        faq2q: 'Can I use it offline?',
+        faq2a: 'Absolutely! Once installed as a PWA, you can use Note Book even without internet connection.',
+        faq3q: 'How do I install the app?',
+        faq3a: 'Look for the download button in the bottom right corner, or use your browser\'s "Add to Home Screen" option.',
+        faq4q: 'Can I share my notes?',
+        faq4a: 'Currently, notes are private to your device. You can copy and paste text to share if needed.',
+      },
+      ja: {
+        title: 'ノートブック',
+        subtitle: '学習とメモのためのデジタルパートナー',
+        open: 'ノートブックを開く',
+        create: '新しいノートを作成',
+        features: '特徴',
+        easyNote: '簡単なメモ作成',
+        easyNoteDesc: 'シンプルで直感的なインターフェースでメモを作成・編集',
+        autoSave: '自動保存',
+        autoSaveDesc: '入力中に自動でメモを保存',
+        pwaReady: 'PWA対応',
+        pwaReadyDesc: 'アプリとしてインストールしてすぐにアクセス',
+        privacy: 'プライバシー重視',
+        privacyDesc: 'すべてのメモはあなたの端末にのみ保存されます',
+        howTo: '使い方',
+        step1: 'ノートブックを開く',
+        step1Desc: '「ノートブックを開く」をクリックしてメモを始めましょう',
+        step2: '新しいノートを作成',
+        step2Desc: '「＋」ボタンで新しいノートを作成',
+        step3: '書き始める',
+        step3Desc: '考えやアイデアを入力すると自動保存されます',
+        step4: 'アプリとしてインストール',
+        step4Desc: '右下のダウンロードボタンでPWAをインストール',
+        faq: 'よくある質問',
+        faq1q: 'データは安全ですか？',
+        faq1a: 'はい！すべてのメモはローカルストレージに保存され、外部に送信されません。',
+        faq2q: 'オフラインで使えますか？',
+        faq2a: 'はい！PWAとしてインストールすればオフラインでも使えます。',
+        faq3q: 'アプリのインストール方法は？',
+        faq3a: '右下のダウンロードボタン、またはブラウザの「ホーム画面に追加」からインストールできます。',
+        faq4q: 'メモを共有できますか？',
+        faq4a: '現在は端末内のみです。内容をコピーして共有してください。',
+      }
+    };
+
+    function setLang(lang) {
+      localStorage.setItem('notebook-lang', lang);
+      applyLang(lang);
+    }
+    function getLang() {
+      return localStorage.getItem('notebook-lang') || (navigator.language.startsWith('zh') ? 'zh' : (navigator.language.startsWith('ja') ? 'ja' : 'en'));
+    }
+    function applyLang(lang) {
+      const dict = LANGS[lang] || LANGS['en'];
+      document.querySelector('.title').textContent = dict.title;
+      document.querySelector('.subtitle').textContent = dict.subtitle;
+      document.querySelector('.btn-primary').innerHTML = `<i class="fas fa-book-open"></i> ${dict.open}`;
+      document.querySelector('.btn-secondary').innerHTML = `<i class="fas fa-plus"></i> ${dict.create}`;
+      document.querySelector('.content-section .section-title').textContent = dict.features;
+      const features = document.querySelectorAll('.feature-card');
+      if (features.length >= 4) {
+        features[0].querySelector('h3').textContent = dict.easyNote;
+        features[0].querySelector('p').textContent = dict.easyNoteDesc;
+        features[1].querySelector('h3').textContent = dict.autoSave;
+        features[1].querySelector('p').textContent = dict.autoSaveDesc;
+        features[2].querySelector('h3').textContent = dict.pwaReady;
+        features[2].querySelector('p').textContent = dict.pwaReadyDesc;
+        features[3].querySelector('h3').textContent = dict.privacy;
+        features[3].querySelector('p').textContent = dict.privacyDesc;
+      }
+      document.querySelectorAll('.content-section')[1].querySelector('.section-title').textContent = dict.howTo;
+      const steps = document.querySelectorAll('.step');
+      if (steps.length >= 4) {
+        steps[0].querySelector('h3').textContent = dict.step1;
+        steps[0].querySelector('p').textContent = dict.step1Desc;
+        steps[1].querySelector('h3').textContent = dict.step2;
+        steps[1].querySelector('p').textContent = dict.step2Desc;
+        steps[2].querySelector('h3').textContent = dict.step3;
+        steps[2].querySelector('p').textContent = dict.step3Desc;
+        steps[3].querySelector('h3').textContent = dict.step4;
+        steps[3].querySelector('p').textContent = dict.step4Desc;
+      }
+      document.querySelectorAll('.content-section')[2].querySelector('.section-title').textContent = dict.faq;
+      const faqs = document.querySelectorAll('.faq-item');
+      if (faqs.length >= 4) {
+        faqs[0].querySelector('h3').textContent = dict.faq1q;
+        faqs[0].querySelector('p').textContent = dict.faq1a;
+        faqs[1].querySelector('h3').textContent = dict.faq2q;
+        faqs[1].querySelector('p').textContent = dict.faq2a;
+        faqs[2].querySelector('h3').textContent = dict.faq3q;
+        faqs[2].querySelector('p').textContent = dict.faq3a;
+        faqs[3].querySelector('h3').textContent = dict.faq4q;
+        faqs[3].querySelector('p').textContent = dict.faq4a;
+      }
+    }
+    // 語言切換按鈕邏輯
+    const langBtn = document.getElementById('lang-switch-btn');
+    const langDropdown = document.getElementById('lang-dropdown');
+    langBtn.onclick = function(e) {
+      langDropdown.style.display = langDropdown.style.display === 'block' ? 'none' : 'block';
+      e.stopPropagation();
+    };
+    document.body.addEventListener('click', function() {
+      langDropdown.style.display = 'none';
+    });
+    document.querySelectorAll('.lang-option').forEach(opt => {
+      opt.onclick = function(e) {
+        setLang(opt.dataset.lang);
+        langDropdown.style.display = 'none';
+        e.stopPropagation();
+      };
+    });
+    // 初始化語言
+    applyLang(getLang());
   </script>
   <!-- Download/Install App Bar -->
 <div id="download-app-bar" style="
