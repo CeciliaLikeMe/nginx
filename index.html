@@ -281,6 +281,25 @@
       .floating-element {
         display: none;
       }
+      
+      .install-btn {
+        bottom: 15px;
+        right: 15px;
+        padding: 12px 20px;
+        font-size: 14px;
+      }
+      
+      .install-btn span {
+        display: none;
+      }
+      
+      .features-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .content-sections {
+        padding: 0 15px;
+      }
     }
 
     /* Scroll indicator */
@@ -356,6 +375,207 @@
         opacity: 0;
       }
     }
+
+    /* Additional content for scrolling */
+    .content-sections {
+      width: 100%;
+      max-width: 1200px;
+      margin-top: 50px;
+      padding: 0 20px;
+    }
+
+    .content-section {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 15px;
+      padding: 30px;
+      margin-bottom: 30px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+      animation: fadeInUp 1s ease-out 1.2s both;
+    }
+
+    .section-title {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 
+        0 0 10px rgba(255, 255, 255, 0.5),
+        0 0 20px rgba(255, 255, 255, 0.3),
+        0 0 30px rgba(255, 255, 255, 0.1);
+      margin-bottom: 25px;
+      letter-spacing: 1px;
+      position: relative;
+    }
+
+    .section-title::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      left: -20px;
+      right: -20px;
+      bottom: -10px;
+      background: linear-gradient(45deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4);
+      background-size: 400% 400%;
+      border-radius: 15px;
+      z-index: -1;
+      animation: gradientShift 3s ease infinite;
+      opacity: 0.8;
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+
+    .feature-card {
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 20px;
+      text-align: center;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .feature-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+    }
+
+    .feature-card i {
+      font-size: 40px;
+      color: #ffffff;
+      margin-bottom: 15px;
+    }
+
+    .feature-card h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1.2rem, 2vw, 1.5rem);
+      font-weight: 700;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      margin-bottom: 10px;
+    }
+
+    .feature-card p {
+      font-size: clamp(0.9rem, 1.5vw, 1rem);
+      color: rgba(255, 255, 255, 0.7);
+      line-height: 1.6;
+    }
+
+    .steps-container {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .step {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 15px 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .step-number {
+      background: linear-gradient(45deg, #ff6b6b, #ee5a24);
+      color: white;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Orbitron', monospace;
+      font-size: 1.2rem;
+      font-weight: 700;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.3);
+    }
+
+    .step-content h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      margin-bottom: 5px;
+    }
+
+    .step-content p {
+      font-size: clamp(0.8rem, 1.3vw, 0.9rem);
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.4;
+    }
+
+    .faq-container {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    .faq-item {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 10px;
+      padding: 15px 20px;
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    .faq-item h3 {
+      font-family: 'Orbitron', monospace;
+      font-size: clamp(1rem, 1.6vw, 1.1rem);
+      font-weight: 600;
+      color: #ffffff;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+      margin-bottom: 5px;
+    }
+
+    .faq-item p {
+      font-size: clamp(0.8rem, 1.2vw, 0.9rem);
+      color: rgba(255, 255, 255, 0.6);
+      line-height: 1.4;
+    }
+
+    /* Download/Install App Floating Button */
+    .install-btn {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #667eea, #764ba2);
+      color: white;
+      border: none;
+      border-radius: 50px;
+      padding: 15px 25px;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      animation: bounce 3s infinite;
+    }
+
+    .install-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    }
+
+    .install-btn i {
+      font-size: 20px;
+    }
   </style>
 </head>
 
@@ -375,7 +595,7 @@
       <h1 class="title">Note Book</h1>
       <p class="subtitle">Your digital companion for learning and note-taking</p>
     </div>
-
+    
     <!-- Character section -->
     <div class="character-section">
       <div class="character-container">
@@ -410,7 +630,101 @@
     <div class="scroll-indicator">
       <i class="fas fa-chevron-down"></i>
     </div>
+
+    <!-- Additional content for scrolling -->
+    <div class="content-sections">
+      <!-- Features Section -->
+      <section class="content-section">
+        <h2 class="section-title">Features</h2>
+        <div class="features-grid">
+          <div class="feature-card">
+            <i class="fas fa-edit"></i>
+            <h3>Easy Note Taking</h3>
+            <p>Create and edit notes with a simple, intuitive interface</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-save"></i>
+            <h3>Auto Save</h3>
+            <p>Your notes are automatically saved as you type</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-mobile-alt"></i>
+            <h3>PWA Ready</h3>
+            <p>Install as an app on your device for quick access</p>
+          </div>
+          <div class="feature-card">
+            <i class="fas fa-shield-alt"></i>
+            <h3>Privacy First</h3>
+            <p>All your notes are stored locally on your device</p>
+          </div>
+        </div>
+      </section>
+
+      <!-- How to Use Section -->
+      <section class="content-section">
+        <h2 class="section-title">How to Use</h2>
+        <div class="steps-container">
+          <div class="step">
+            <div class="step-number">1</div>
+            <div class="step-content">
+              <h3>Open Note Book</h3>
+              <p>Click "Open Note Book" to start creating your notes</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <div class="step-content">
+              <h3>Create New Note</h3>
+              <p>Click the "+" button to create a new note</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <div class="step-content">
+              <h3>Start Writing</h3>
+              <p>Type your thoughts and ideas - they'll auto-save</p>
+            </div>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <div class="step-content">
+              <h3>Install as App</h3>
+              <p>Click the download button to install as a PWA</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- FAQ Section -->
+      <section class="content-section">
+        <h2 class="section-title">Frequently Asked Questions</h2>
+        <div class="faq-container">
+          <div class="faq-item">
+            <h3>Is my data safe?</h3>
+            <p>Yes! All your notes are stored locally on your device using localStorage. They never leave your browser.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I use it offline?</h3>
+            <p>Absolutely! Once installed as a PWA, you can use Note Book even without internet connection.</p>
+          </div>
+          <div class="faq-item">
+            <h3>How do I install the app?</h3>
+            <p>Look for the download button in the bottom right corner, or use your browser's "Add to Home Screen" option.</p>
+          </div>
+          <div class="faq-item">
+            <h3>Can I share my notes?</h3>
+            <p>Currently, notes are private to your device. You can copy and paste text to share if needed.</p>
+          </div>
+        </div>
+      </section>
+    </div>
   </div>
+
+  <!-- Download/Install App Floating Button -->
+  <button id="installAppBtn" class="install-btn">
+    <i class="fas fa-download"></i>
+    <span>Install App</span>
+  </button>
 
   <script>
     // Create animated particles
@@ -442,6 +756,12 @@
       hideLoading();
       registerServiceWorker();
       checkInstallPrompt();
+      
+      // Initially hide install button
+      const installBtn = document.getElementById('installAppBtn');
+      if (installBtn) {
+        installBtn.style.display = 'none';
+      }
     });
 
     // Register Service Worker for PWA
@@ -466,7 +786,13 @@
     });
 
     function showInstallPrompt() {
-      // Create install prompt
+      // Show the floating install button
+      const installBtn = document.getElementById('installAppBtn');
+      if (installBtn) {
+        installBtn.style.display = 'flex';
+      }
+      
+      // Create install prompt (optional - you can remove this if you prefer only the floating button)
       const installPrompt = document.createElement('div');
       installPrompt.style.cssText = `
         position: fixed;
@@ -539,6 +865,11 @@
       // Check if app is already installed
       if (window.matchMedia('(display-mode: standalone)').matches) {
         console.log('App is already installed');
+        // Hide install button if app is already installed
+        const installBtn = document.getElementById('installAppBtn');
+        if (installBtn) {
+          installBtn.style.display = 'none';
+        }
       }
     }
 
@@ -553,6 +884,19 @@
       });
     });
 
+    // Handle install button click
+    const installBtn = document.getElementById('installAppBtn');
+    if (installBtn) {
+      installBtn.addEventListener('click', () => {
+        if (deferredPrompt) {
+          installApp();
+        } else {
+          // If no deferred prompt, show a message
+          alert('Installation prompt not available. Please use your browser\'s "Add to Home Screen" option.');
+        }
+      });
+    }
+
     // Add parallax effect to particles
     window.addEventListener('scroll', () => {
       const scrolled = window.pageYOffset;
@@ -564,6 +908,61 @@
       });
     });
   </script>
+  <!-- Download/Install App Bar -->
+<div id="download-app-bar" style="
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 9999;
+  background: linear-gradient(45deg, #667eea, #764ba2); color: #fff;
+  text-align: center; padding: 16px 0; font-size: 18px; display: none;">
+  <button id="download-app-btn" style="
+    background: #fff; color: #667eea; border: none; border-radius: 30px;
+    padding: 10px 30px; font-size: 18px; font-weight: bold; cursor: pointer;">
+    Install App
+  </button>
+  <span id="ios-tip" style="display:none;">請用 Safari 點選「分享」並選擇「加入主畫面」安裝 App</span>
+</div>
+<script>
+(function() {
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    window.deferredPrompt = e;
+  });
+  function isAndroid() {
+    return /android/i.test(navigator.userAgent);
+  }
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+  function isInStandaloneMode() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+      || window.navigator.standalone === true;
+  }
+  function isInAppWebView() {
+    return false; // 如有自訂 UA 可加強
+  }
+  if (!isInStandaloneMode() && !isInAppWebView()) {
+    var bar = document.getElementById('download-app-bar');
+    var btn = document.getElementById('download-app-btn');
+    var iosTip = document.getElementById('ios-tip');
+    bar.style.display = 'block';
+    if (isAndroid() || (!isAndroid() && !isIOS())) {
+      btn.style.display = 'inline-block';
+      iosTip.style.display = 'none';
+      btn.onclick = function() {
+        if (window.deferredPrompt) {
+          window.deferredPrompt.prompt();
+        } else {
+          alert('請使用瀏覽器的「安裝應用程式」或「加到主畫面」功能安裝 App');
+        }
+      };
+    } else if (isIOS()) {
+      btn.style.display = 'none';
+      iosTip.style.display = 'inline-block';
+    }
+  }
+})();
+</script>
 </body>
 </html>
 

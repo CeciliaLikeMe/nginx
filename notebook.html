@@ -712,5 +712,60 @@
       }
     }
   </script>
+  <!-- Download/Install App Bar -->
+<div id="download-app-bar" style="
+  position: fixed; bottom: 0; left: 0; width: 100%; z-index: 9999;
+  background: linear-gradient(45deg, #667eea, #764ba2); color: #fff;
+  text-align: center; padding: 16px 0; font-size: 18px; display: none;">
+  <button id="download-app-btn" style="
+    background: #fff; color: #667eea; border: none; border-radius: 30px;
+    padding: 10px 30px; font-size: 18px; font-weight: bold; cursor: pointer;">
+    Install App
+  </button>
+  <span id="ios-tip" style="display:none;">請用 Safari 點選「分享」並選擇「加入主畫面」安裝 App</span>
+</div>
+<script>
+(function() {
+  let deferredPrompt = null;
+  window.addEventListener('beforeinstallprompt', function(e) {
+    e.preventDefault();
+    deferredPrompt = e;
+    window.deferredPrompt = e;
+  });
+  function isAndroid() {
+    return /android/i.test(navigator.userAgent);
+  }
+  function isIOS() {
+    return /iphone|ipad|ipod/i.test(navigator.userAgent);
+  }
+  function isInStandaloneMode() {
+    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
+      || window.navigator.standalone === true;
+  }
+  function isInAppWebView() {
+    return false; // 如有自訂 UA 可加強
+  }
+  if (!isInStandaloneMode() && !isInAppWebView()) {
+    var bar = document.getElementById('download-app-bar');
+    var btn = document.getElementById('download-app-btn');
+    var iosTip = document.getElementById('ios-tip');
+    bar.style.display = 'block';
+    if (isAndroid() || (!isAndroid() && !isIOS())) {
+      btn.style.display = 'inline-block';
+      iosTip.style.display = 'none';
+      btn.onclick = function() {
+        if (window.deferredPrompt) {
+          window.deferredPrompt.prompt();
+        } else {
+          alert('請使用瀏覽器的「安裝應用程式」或「加到主畫面」功能安裝 App');
+        }
+      };
+    } else if (isIOS()) {
+      btn.style.display = 'none';
+      iosTip.style.display = 'inline-block';
+    }
+  }
+})();
+</script>
 </body>
 </html> 
